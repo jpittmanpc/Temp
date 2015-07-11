@@ -1,0 +1,73 @@
+package vzw.icon2015;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.altbeacon.beacon.BeaconManager;
+
+/**
+ * Created by admin on 6/28/2015.
+ */
+public class fBeacon extends Activity {
+    protected static final String TAG = "Something";
+            private BeaconManager beaconmgr;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+        verifyBluetooth();
+        setContentView(R.layout.fbeacon);
+        TextView toptext = (TextView) findViewById(R.id.quizText);
+        final Button back = (Button) findViewById(R.id.feedback);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent i = new Intent(this, back);
+                //startActivity(i);
+            }
+        });
+    }
+
+        private void verifyBluetooth() {
+
+            try {
+                if (!BeaconManager.getInstanceForApplication(this).checkAvailability()) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Bluetooth not enabled");
+                    builder.setMessage("Please enable bluetooth in settings and restart this application.");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            finish();
+                            System.exit(0);
+                        }
+                    });
+                    builder.show();
+                }
+            }
+            catch (RuntimeException e) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Bluetooth LE not available");
+                builder.setMessage("Sorry, this device does not support Bluetooth LE.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                        System.exit(0);
+                    }
+
+                });
+                builder.show();
+
+            }
+
+    }
+}
